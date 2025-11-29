@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>School Organizer & Grade Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>School Organizer & Grade Tracker</h1>
+      <nav>
+        <button class="nav-btn" data-view="dashboard">Dashboard</button>
+        <button class="nav-btn" data-view="tasks">Tasks</button>
+        <button class="nav-btn" data-view="grades">Grades & GPA</button>
+        <button class="nav-btn" data-view="settings">Integrations</button>
+      </nav>
+    </header>
+
+    <main>
+      <!-- DASHBOARD -->
+      <section id="view-dashboard" class="view active">
+        <h2>Dashboard</h2>
+        <div class="dashboard-grid">
+          <div class="card">
+            <h3>Upcoming Tasks</h3>
+            <label>
+              Show tasks due in
+              <input type="number" id="dashboard-days" value="3" min="1" max="30" />
+              days
+            </label>
+            <ul id="dashboard-upcoming"></ul>
+          </div>
+
+          <div class="card">
+            <h3>Current GPA</h3>
+            <p id="gpa-display">No grades yet.</p>
+          </div>
+
+          <div class="card">
+            <h3>What-If GPA</h3>
+            <form id="whatif-form">
+              <label>
+                Course
+                <select id="whatif-course"></select>
+              </label>
+              <label>
+                Hypothetical final %
+                <input type="number" id="whatif-percent" min="0" max="100" value="90" />
+              </label>
+              <button type="submit">Calculate</button>
+            </form>
+            <p id="whatif-result"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TASKS -->
+      <section id="view-tasks" class="view">
+        <h2>Tasks (Homework / Projects / Exams)</h2>
+
+        <form id="task-form" class="card">
+          <h3>Add / Edit Task</h3>
+          <input type="hidden" id="task-id" />
+          <label>
+            Title
+            <input type="text" id="task-title" required />
+          </label>
+          <label>
+            Course
+            <select id="task-course"></select>
+          </label>
+          <label>
+            Type
+            <select id="task-type">
+              <option value="homework">Homework</option>
+              <option value="project">Project</option>
+              <option value="exam">Exam</option>
+            </select>
+          </label>
+          <label>
+            Due Date &amp; Time
+            <input type="datetime-local" id="task-due" required />
+          </label>
+          <label>
+            Estimate (hours, optional)
+            <input type="number" id="task-estimate" min="0" step="0.5" />
+          </label>
+          <label>
+            Auto-generate steps for big task?
+            <input type="checkbox" id="task-auto-steps" checked />
+          </label>
+          <button type="submit">Save Task</button>
+          <button type="button" id="task-reset">Clear</button>
+        </form>
+
+        <div class="card">
+          <h3>All Tasks</h3>
+          <label>
+            Filter by course
+            <select id="task-filter-course"></select>
+          </label>
+          <label>
+            Filter by type
+            <select id="task-filter-type">
+              <option value="">All</option>
+              <option value="homework">Homework</option>
+              <option value="project">Project</option>
+              <option value="exam">Exam</option>
+            </select>
+          </label>
+          <ul id="task-list"></ul>
+        </div>
+
+        <div class="card">
+          <h3>Steps for Selected Task</h3>
+          <p id="steps-task-title">No task selected.</p>
+          <ul id="steps-list"></ul>
+          <form id="step-form">
+            <input type="hidden" id="step-task-id" />
+            <label>
+              New Step
+              <input type="text" id="step-title" />
+            </label>
+            <button type="submit">Add Step</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- GRADES & GPA -->
+      <section id="view-grades" class="view">
+        <h2>Grades & GPA</h2>
+
+        <div class="card">
+          <h3>Courses</h3>
+          <form id="course-form">
+            <input type="hidden" id="course-id" />
+            <label>
+              Course Name
+              <input type="text" id="course-name" required />
+            </label>
+            <label>
+              Credits
+              <input type="number" id="course-credits" min="0" step="0.5" value="3" />
+            </label>
+            <button type="submit">Save Course</button>
+            <button type="button" id="course-reset">Clear</button>
+          </form>
+          <ul id="course-list"></ul>
+        </div>
+
+        <div class="card">
+          <h3>Grade Items</h3>
+          <form id="grade-form">
+            <input type="hidden" id="grade-id" />
+            <label>
+              Course
+              <select id="grade-course"></select>
+            </label>
+            <label>
+              Item Name
+              <input type="text" id="grade-name" required />
+            </label>
+            <label>
+              Category (e.g., Exam, HW)
+              <input type="text" id="grade-category" />
+            </label>
+            <label>
+              Weight (% of course grade)
+              <input type="number" id="grade-weight" min="0" max="100" />
+            </label>
+            <label>
+              Score (%)
+              <input type="number" id="grade-percent" min="0" max="100" />
+            </label>
+            <button type="submit">Save Grade Item</button>
+            <button type="button" id="grade-reset">Clear</button>
+          </form>
+          <ul id="grade-list"></ul>
+        </div>
+
+        <div class="card">
+          <h3>GPA Summary</h3>
+          <p id="gpa-summary"></p>
+        </div>
+      </section>
+
+      <!-- SETTINGS / INTEGRATIONS -->
+      <section id="view-settings" class="view">
+        <h2>Integrations & Settings</h2>
+        <div class="card">
+          <h3>Google Classroom / Canvas (Placeholder)</h3>
+          <p>
+            This demo includes placeholder buttons where you would integrate real APIs
+            using OAuth. In a production app, you’d:
+          </p>
+          <ol>
+            <li>Implement Google / Canvas OAuth sign-in on the backend.</li>
+            <li>Call their APIs to fetch courses & assignments.</li>
+            <li>Merge them into this app’s <code>courses</code> and <code>tasks</code>.</li>
+          </ol>
+          <button id="btn-import-google">Simulate Import from Google Classroom</button>
+          <button id="btn-import-canvas">Simulate Import from Canvas</button>
+          <p id="integration-status"></p>
+        </div>
+
+        <div class="card danger">
+          <h3>Danger Zone</h3>
+          <button id="btn-clear-all">Clear all data</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
